@@ -13,6 +13,7 @@ import com.itheima.reggie.service.SetmealService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +24,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper,Setmeal> imple
 
     @Autowired
     private SetmealDishService setmealDishService;
-    @Override
+    @Transactional
      public void saveWithDish(SetmealDto setmealDto) {
         this.save(setmealDto);
         List<SetmealDish> setmealDishList=setmealDto.getSetmealDishes();
@@ -37,7 +38,7 @@ public class SetmealServiceImpl extends ServiceImpl<SetmealMapper,Setmeal> imple
      setmealDishService.saveBatch(setmealDishList);
     }
 
-    @Override
+    @Transactional
     public void removeWithDish(List<Long> ids) {
         LambdaQueryWrapper<Setmeal> queryWrapper=new LambdaQueryWrapper<>();
         queryWrapper.in(Setmeal::getId,ids);

@@ -136,7 +136,7 @@ public class DishController {
         log.info("dish:{}");
         LambdaQueryWrapper <Dish> dishLambdaQueryWrapper=new LambdaQueryWrapper<>();
         dishLambdaQueryWrapper.like(StringUtils.isNotEmpty(dish.getName()),Dish::getName,dish.getName());
-        dishLambdaQueryWrapper.eq(dish.getCreateTime()!=null,Dish::getCategoryId,dish.getCategoryId());
+        dishLambdaQueryWrapper.eq(dish.getCategoryId()!=null,Dish::getCategoryId,dish.getCategoryId());
         dishLambdaQueryWrapper.eq(Dish::getStatus,1);
         List<Dish> dishList=dishService.list(dishLambdaQueryWrapper);
 
