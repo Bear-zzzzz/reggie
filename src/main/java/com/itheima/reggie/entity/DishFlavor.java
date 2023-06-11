@@ -1,15 +1,17 @@
 package com.itheima.reggie.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
-菜品口味
+ * 菜品口味
+ *
+ * @author Sire
  */
 @Data
 public class DishFlavor implements Serializable {
@@ -30,6 +32,10 @@ public class DishFlavor implements Serializable {
     //口味数据list
     private String value;
 
+    //逻辑删除 0是 未删除， 1是 删除
+    @TableLogic
+    private Integer isDeleted;
+
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
@@ -45,9 +51,5 @@ public class DishFlavor implements Serializable {
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long updateUser;
-
-
-    //是否删除
-    private Integer isDeleted;
 
 }

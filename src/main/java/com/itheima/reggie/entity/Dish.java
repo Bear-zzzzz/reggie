@@ -1,16 +1,18 @@
 package com.itheima.reggie.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- 菜品
+ * 菜品
+ *
+ * @author Sire
  */
 @Data
 public class Dish implements Serializable {
@@ -50,6 +52,10 @@ public class Dish implements Serializable {
 
     //顺序
     private Integer sort;
+
+    //逻辑删除 0是 未删除， 1是 删除
+    @TableLogic
+    private Integer isDeleted;
 
 
     @TableField(fill = FieldFill.INSERT)
