@@ -52,14 +52,18 @@ public class AddressBookController {
             return R.success(addressBook);
     }
     @GetMapping("/default")
-    public R<AddressBook> getDefault(){
-        LambdaQueryWrapper<AddressBook> wrapper=new LambdaQueryWrapper<>();
-        wrapper.eq(AddressBook::getIsDefault,1);
-        AddressBook addressBook=addressBookService.getOne(wrapper);
-        if(addressBook==null)
-            return R.error("不存在");
-        else
+    public R<AddressBook> getDefault() {
+        LambdaQueryWrapper<AddressBook> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AddressBook::getUserId, BaseContext.getCurrentId());
+        queryWrapper.eq(AddressBook::getIsDefault, 1);
+
+        //SQL:select * from address_book where user_id = ? and is_default = 1
+        AddressBook addressBook = addressBookService.getOne(queryWrapper);
+
+        if(addressBook!=null)
             return R.success(addressBook);
+
+        return R.error("没有找到");
     }
 
     @GetMapping("/list")

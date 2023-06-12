@@ -200,7 +200,7 @@ public class DishController {
         // 使用缓存进行代码优化
         String key = "dish_" + dish.getCategoryId() + "_" + dish.getStatus();
         // 首先要从redis中获取缓存数据
-        dishDtoList = (List<DishDto>) redisTemplate.opsForValue().get(key);
+        dishDtoList=(List<DishDto>)redisTemplate.opsForValue().get(key);
         // 如果缓存中存在则直接返回
         if (null != dishDtoList) {
             return R.success(dishDtoList);
@@ -223,14 +223,13 @@ public class DishController {
             if (category != null) {
                 dishDto.setCategoryName(category.getName());
             }
-            LambdaQueryWrapper<DishFlavor> wrapper = new LambdaQueryWrapper<>();
-            wrapper.eq(DishFlavor::getDishId, item.getId());
-
+            LambdaQueryWrapper<DishFlavor> wrapper=new LambdaQueryWrapper<>();
+            wrapper.eq(DishFlavor::getDishId,item.getId());
             dishDto.setFlavors(dishFlavorService.list(wrapper));
             return dishDto;
         }).collect(Collectors.toList());
         // 如果不存在，就查数据库，然后存到redis中 60分钟后过期
-        redisTemplate.opsForValue().set(key, dishDtoList, 60, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(key,dishDtoList,60,TimeUnit.MINUTES) ;
         return R.success(dishDtoList);
     }
 

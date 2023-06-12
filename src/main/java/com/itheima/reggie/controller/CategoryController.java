@@ -22,6 +22,7 @@ public class CategoryController {
     @Autowired
     private CategoryService categoryService;
 
+
     /**
      * 新增分类
      *
@@ -96,6 +97,8 @@ public class CategoryController {
      */
     @GetMapping("/list")
     public R<List<Category>> list(Category category) {
+
+
         // 条件构造器
         LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
         // 添加条件

@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +39,8 @@ public class SetmealController {
     @Autowired
     private SetmealDishService setmealDishService;
 
+
+
     /**
      * 新增套餐
      *
@@ -48,6 +51,7 @@ public class SetmealController {
     @CacheEvict(value = "setmealCache", allEntries = true) // 清除对应容器内的所有缓存
     public R<String> save(@RequestBody SetmealDto setmealDto) {
         log.info("套餐信息：{}", setmealDto);
+        String key = "dish_" + setmealDto.getCategoryId() + "_" + setmealDto.getStatus();
         setmealService.saveWithDish(setmealDto);
         return R.success("新增套餐成功");
     }
@@ -76,6 +80,7 @@ public class SetmealController {
     @CacheEvict(value = "setmealCache", allEntries = true) // 清除对应容器内的所有缓存
     public R<String> update(@RequestBody SetmealDto setmealDto) {
         log.info(setmealDto.toString());
+        String key = "dish_" + setmealDto.getCategoryId() + "_" + setmealDto.getStatus();
         setmealService.updateWithDish(setmealDto);
         return R.success("套餐修改成功");
     }
@@ -160,6 +165,7 @@ public class SetmealController {
             return R.error("套餐id不能为空");
         }
         setmealService.updateStatus(status, ids);
+
         return R.success("更改成功");
     }
 
@@ -170,16 +176,19 @@ public class SetmealController {
      * @return
      */
     @GetMapping("/list")
-    @Cacheable(value = "setmealCache", key = "#setmeal.categoryId + '_' + #setmeal.status")
-    public R<List<Setmeal>> list(Setmeal setmeal) {
+    public R<List<Setmeal>> list( Setmeal setmeal) {
+
         log.info("setmeal:{}", setmeal);
+        List<Setmeal> setmealList=null;
+
+
         //条件构造器
         LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(StringUtils.isNotEmpty(setmeal.getName()), Setmeal::getName, setmeal.getName());
         queryWrapper.eq(null != setmeal.getCategoryId(), Setmeal::getCategoryId, setmeal.getCategoryId());
         queryWrapper.eq(null != setmeal.getStatus(), Setmeal::getStatus, setmeal.getStatus());
         queryWrapper.orderByDesc(Setmeal::getUpdateTime);
-
-        return R.success(setmealService.list(queryWrapper));
+        setmealList=setmealService.list(queryWrapper);
+        return R.success(setmealList);
     }
 }
