@@ -139,6 +139,7 @@ public class SetmealController {
      * @return
      */
     @DeleteMapping
+    @CacheEvict(value = "setmealCache", allEntries = true)
     public R<String> delete(@RequestParam List<Long> ids) {
         log.info("ids:{}", ids);
 
@@ -175,6 +176,7 @@ public class SetmealController {
      * @param setmeal
      * @return
      */
+    @Cacheable(value = "setmealCache",key = "#setmeal.categoryId+'_'+#setmeal.status")
     @GetMapping("/list")
     public R<List<Setmeal>> list( Setmeal setmeal) {
 
